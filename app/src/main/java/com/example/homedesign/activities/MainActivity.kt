@@ -1,4 +1,4 @@
-package com.example.homedesign
+package com.example.homedesign.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

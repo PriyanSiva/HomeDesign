@@ -1,11 +1,12 @@
-package com.example.homedesign
+package com.example.homedesign.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.homedesign.R
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,5 +18,15 @@ class SplashActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
+
+        Handler().postDelayed({
+            startActivity(Intent(this, IntroActivity::class.java))
+
+            finish()
+        }, 2500)
+
+
     }
+
+
 }
