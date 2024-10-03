@@ -10,6 +10,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.homedesign.R
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class SignUpActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +55,25 @@ class SignUpActivity : BaseActivity() {
         val password : String = et_password.text.toString().trim { it <= ' '}
 
         if(validateForm(name, email, password)){
+
+            showProgressDialog(resources.getString(R.string.please_wait))
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener({
+                    task ->
+                        hideProgressDialog()
+                        if(task.isSuccessful){
+                            val firebaseUser: FirebaseUser = task.result!!.user!!
+                            val registeredEmail = firebaseUser.email!!
+                            Toast.makeText(this, "$name you have successfully registered "
+                                    + "the email address: $registeredEmail", Toast.LENGTH_LONG).show()
+
+                            FirebaseAuth.getInstance().signOut()
+                            finish()
+                        } else {
+                            Toast.makeText(this, task.exception!!.message, Toast.LENGTH_LONG).show()
+                        }
+
+                })
             Toast.makeText(this@SignUpActivity,
                 "Now we can register a new user.",
                 Toast.LENGTH_LONG).show()
