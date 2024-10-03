@@ -3,6 +3,9 @@ package com.example.homedesign.activities
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.WindowManager
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -34,12 +37,25 @@ class SignUpActivity : BaseActivity() {
         }
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
+        val buttonSignUp : Button = findViewById(R.id.btn_sign_up)
+        buttonSignUp.setOnClickListener() {
+            registerUser()
+        }
     }
 
     private fun registerUser() {
+        val et_name: EditText = findViewById(R.id.et_name)
+        val et_email: EditText = findViewById(R.id.et_email)
+        val et_password: EditText = findViewById(R.id.et_password)
         val name : String = et_name.text.toString().trim { it <= ' '}
         val email : String = et_email.text.toString().trim { it <= ' '}
         val password : String = et_password.text.toString().trim { it <= ' '}
+
+        if(validateForm(name, email, password)){
+            Toast.makeText(this@SignUpActivity,
+                "Now we can register a new user.",
+                Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun validateForm(name: String, email : String, password: String) : Boolean {

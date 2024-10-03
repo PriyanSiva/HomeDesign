@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "916191560668",
+    "project_id": "homedesign-91897",
+    "storage_bucket": "homedesign-91897.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916191560668:android:62a4f6ab70661cd5d38519",
+        "android_client_info": {
+          "package_name": "com.example.homedesign"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9P1H75T432G8MSkhXUfaIc_JOFirBhGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

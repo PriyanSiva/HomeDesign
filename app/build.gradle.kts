@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.google.services)
+//    alias(libs.plugins.google.services)
+    id("com.google.gms.google-services")
 }
 android {
     namespace = "com.example.homedesign"
@@ -65,7 +66,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation("com.google.android.material:material:1.12.0")
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
-    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-analytics")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
