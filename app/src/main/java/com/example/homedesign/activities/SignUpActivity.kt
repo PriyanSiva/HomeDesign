@@ -2,6 +2,7 @@ package com.example.homedesign.activities
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
@@ -10,6 +11,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.homedesign.R
+import com.example.homedesign.firebase.FirestoreClass
+import com.example.homedesign.models.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -64,11 +67,12 @@ class SignUpActivity : BaseActivity() {
                         if(task.isSuccessful){
                             val firebaseUser: FirebaseUser = task.result!!.user!!
                             val registeredEmail = firebaseUser.email!!
-                            Toast.makeText(this, "$name you have successfully registered "
-                                    + "the email address: $registeredEmail", Toast.LENGTH_LONG).show()
 
-                            FirebaseAuth.getInstance().signOut()
-                            finish()
+                            val user = User(firebaseUser.uid, name, registeredEmail)
+
+                            val firestoreClass = FirestoreClass()
+                            firestoreClass.registerUser(this, user)
+
                         } else {
                             Toast.makeText(this, "Registration failed", Toast.LENGTH_LONG).show()
                         }
@@ -97,5 +101,15 @@ class SignUpActivity : BaseActivity() {
                 true
             }
         }
+    }
+
+    fun userRegisteredSuccess(){
+        Toast.makeText(this, "You have successfully registered the user"
+                , Toast.LENGTH_LONG).show()
+
+        hideProgressDialog()
+
+        FirebaseAuth.getInstance().signOut()
+        finish()
     }
 }
