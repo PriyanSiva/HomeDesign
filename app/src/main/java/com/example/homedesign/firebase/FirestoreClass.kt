@@ -1,5 +1,6 @@
 package com.example.homedesign.firebase
 
+import com.example.homedesign.activities.SignInActivity
 import com.example.homedesign.activities.SignUpActivity
 import com.example.homedesign.models.User
 import com.example.homedesign.utils.Constants
@@ -18,10 +19,32 @@ class FirestoreClass {
             .set(userInfo, SetOptions.merge())
             .addOnSuccessListener {
                 activity.userRegisteredSuccess()
+            }.addOnFailureListener { e ->
+                println("Error writing document: $e")
             }
     }
 
-    private fun getCurrentUserId(): String {
-        return FirebaseAuth.getInstance().currentUser!!.uid
+    fun signInUser(activity: SignInActivity){
+
+        mFireStore.collection(Constants.USERS)
+            .document(getCurrentUserId())
+            .get()
+            .addOnSuccessListener { document ->
+                val loggedInUser = document.toObject(User::class.java)
+                if (loggedInUser != null) {
+                    activity.signInSuccess(loggedInUser)
+                }
+            }.addOnFailureListener { e ->
+                println("Error writing document: $e")
+            }
+    }
+
+    fun getCurrentUserId(): String {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        var currentUserId = ""
+        if(currentUser != null) {
+            currentUserId = currentUser.uid
+        }
+        return currentUserId
     }
 }

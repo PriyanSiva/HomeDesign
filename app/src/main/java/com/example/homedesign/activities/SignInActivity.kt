@@ -12,7 +12,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.homedesign.R
+import com.example.homedesign.models.User
 import com.google.firebase.auth.FirebaseAuth
+
 
 class SignInActivity : BaseActivity() {
 
@@ -98,5 +100,10 @@ class SignInActivity : BaseActivity() {
                 true
             }
         }
+    }
+
+    fun signInSuccess(loggedInUser: User) {
+        hideProgressDialog()
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }

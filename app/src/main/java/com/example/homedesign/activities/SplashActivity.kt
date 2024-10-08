@@ -7,6 +7,8 @@ import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.homedesign.R
+import com.example.homedesign.firebase.FirestoreClass
+import com.example.homedesign.activities.MainActivity
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +22,14 @@ class SplashActivity : AppCompatActivity() {
         )
 
         Handler().postDelayed({
-            startActivity(Intent(this, IntroActivity::class.java))
+            val firestoreClass = FirestoreClass()
+            var currentUserId = firestoreClass.getCurrentUserId()
+            if(currentUserId.isNotEmpty()) {
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                startActivity(Intent(this, IntroActivity::class.java))
+            }
+
 
             finish()
         }, 2500)
