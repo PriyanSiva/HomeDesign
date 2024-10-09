@@ -1,5 +1,7 @@
 package com.example.homedesign.firebase
 
+import android.app.Activity
+import com.example.homedesign.activities.MainActivity
 import com.example.homedesign.activities.SignInActivity
 import com.example.homedesign.activities.SignUpActivity
 import com.example.homedesign.models.User
@@ -24,7 +26,7 @@ class FirestoreClass {
             }
     }
 
-    fun signInUser(activity: SignInActivity){
+    fun signInUser(activity: Activity){
 
         mFireStore.collection(Constants.USERS)
             .document(getCurrentUserId())
@@ -32,9 +34,25 @@ class FirestoreClass {
             .addOnSuccessListener { document ->
                 val loggedInUser = document.toObject(User::class.java)
                 if (loggedInUser != null) {
-                    activity.signInSuccess(loggedInUser)
+                    when(activity) {
+                        is SignInActivity -> {
+                            activity.signInSuccess(loggedInUser)
+                        }
+                        is MainActivity -> {
+                            activity.updateNavigationUserDetails(loggedInUser)
+                        }
+                    }
+
                 }
             }.addOnFailureListener { e ->
+                when(activity) {
+                    is SignInActivity -> {
+                        activity.hideProgressDialog()
+                    }
+                    is MainActivity -> {
+                        activity.hideProgressDialog()
+                    }
+                }
                 println("Error writing document: $e")
             }
     }

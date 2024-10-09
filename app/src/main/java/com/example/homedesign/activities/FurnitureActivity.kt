@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FurnitureActivity : AppCompatActivity() {
+class FurnitureActivity : BaseActivity() {
     private lateinit var furnitureAdapter: FurnitureAdapter
     private lateinit var recyclerView: RecyclerView
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -25,9 +25,10 @@ class FurnitureActivity : AppCompatActivity() {
         setContentView(R.layout.activity_furniture)
 
         recyclerView = findViewById(R.id.recycler_view)
+//        val emptyView = findViewById(R.id.empty_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        loadFurniture("Bedroom") // Default loading
+        loadFurniture("Bedroom")
     }
 
     private fun loadFurniture(roomType: String) {
@@ -39,6 +40,8 @@ class FurnitureActivity : AppCompatActivity() {
                     val furnitureList = documents.map { document ->
                         document.toObject(Furniture::class.java).copy(id = document.id)
                     }
+                    println("888")
+                    println(furnitureList)
                     furnitureAdapter = FurnitureAdapter(furnitureList)
                     recyclerView.adapter = furnitureAdapter
                 }

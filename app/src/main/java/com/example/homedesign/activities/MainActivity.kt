@@ -5,14 +5,19 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
 import com.example.homedesign.R
 import com.example.homedesign.activities.BaseActivity
+import com.example.homedesign.firebase.FirestoreClass
+import com.example.homedesign.models.User
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import de.hdodenhof.circleimageview.CircleImageView
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -33,6 +38,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             val intent = Intent(this, FurnitureActivity::class.java)
             startActivity(intent)
         }
+
+        val firestoreClass = FirestoreClass()
+        firestoreClass.signInUser(this)
 
     }
 
@@ -82,6 +90,19 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun updateNavigationUserDetails(user: User){
+        val userImageView: CircleImageView = findViewById(R.id.iv_user_image)
+        Glide
+            .with(this)
+            .load(user.image)
+            .centerCrop()
+            .placeholder(R.drawable.ic_user_place_holder)
+            .into(userImageView)
+
+        val username: TextView = findViewById(R.id.tv_username)
+        username.text = user.name
     }
 
 }
