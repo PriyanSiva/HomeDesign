@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homedesign.R
@@ -29,12 +30,27 @@ class FurnitureActivity : BaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         loadFurniture("Bedroom")
+        setupActionBar()
+    }
+
+    private fun setupActionBar() {
+        val profileToolBar: Toolbar = findViewById(R.id.toolbar_my_furniture_activity);
+        setSupportActionBar(profileToolBar)
+
+        val actionBar = supportActionBar
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true)
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_white_color_back_24dp)
+            actionBar.title = "Furniture Store"
+        }
+
+        profileToolBar.setNavigationOnClickListener { onBackPressed() }
     }
 
     private fun loadFurniture(roomType: String) {
+//        .whereEqualTo("roomType", roomType)
         CoroutineScope(Dispatchers.Main).launch {
             db.collection(Constants.FURNITURE)
-                .whereEqualTo("roomType", roomType)
                 .get()
                 .addOnSuccessListener { documents ->
                     val furnitureList = documents.map { document ->
