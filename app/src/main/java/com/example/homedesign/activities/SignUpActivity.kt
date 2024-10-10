@@ -74,7 +74,7 @@ class SignUpActivity : BaseActivity() {
 
                 }
             Toast.makeText(this@SignUpActivity,
-                "Now we can register a new user.",
+                "Registering User",
                 Toast.LENGTH_LONG).show()
         }
     }
