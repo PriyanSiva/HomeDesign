@@ -23,7 +23,7 @@ class CartActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
-        firestore = FirebaseFirestore.getInstance()
+//        firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
         val rvCartItems: RecyclerView = findViewById(R.id.rvCartItems)
