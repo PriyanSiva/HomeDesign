@@ -13,16 +13,24 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import android.Manifest
+import android.util.Log
+import android.webkit.MimeTypeMap
+import android.widget.Button
 import com.example.homedesign.R
 import com.example.homedesign.activities.BaseActivity
 import com.example.homedesign.firebase.FirestoreClass
 import com.example.homedesign.models.User
+import com.example.homedesign.utils.Constants
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.IOException
 
 class MyProfileActivity : BaseActivity() {
 
     private var mSelectedImageFileUri: Uri? = null
+    private lateinit var mUserDetails: User
+    private var mProfileImageURL: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -52,6 +60,18 @@ class MyProfileActivity : BaseActivity() {
                 )
             }
         }
+        val btnUpdate : Button = findViewById(R.id.btn_update)
+        btnUpdate.setOnClickListener {
+            if (mSelectedImageFileUri != null) {
+                uploadUserImage()
+            } else {
+
+                showProgressDialog(resources.getString(R.string.please_wait))
+
+               updateUserProfileData()
+            }
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -126,11 +146,7 @@ class MyProfileActivity : BaseActivity() {
     companion object {
         //A unique code for asking the Read Storage Permission using this we will be check and identify in the method onRequestPermissionsResult
         private const val READ_STORAGE_PERMISSION_CODE = 1
-
-        // TODO (Step 6: Add a constant for image selection from phone storage)
-        // START
         private const val PICK_IMAGE_REQUEST_CODE = 2
-        // END
         const val READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE"
     }
 
@@ -151,6 +167,7 @@ class MyProfileActivity : BaseActivity() {
 
     fun setUserDataInUI(user: User) {
         val ivUserImage: CircleImageView = findViewById(R.id.iv_profile_user_image)
+        mUserDetails = user
         Glide
             .with(this@MyProfileActivity)
             .load(user.image)
@@ -170,20 +187,87 @@ class MyProfileActivity : BaseActivity() {
         }
     }
 
-    private fun getDeclaredPermissions(): List<String> {
-        return try {
-            val packageInfo = packageManager.getPackageInfo(
-                packageName,
-                PackageManager.GET_PERMISSIONS
+    /**
+     * A function to upload the selected user image to firebase cloud storage.
+     */
+    private fun uploadUserImage() {
+
+        showProgressDialog(resources.getString(R.string.please_wait))
+
+        if (mSelectedImageFileUri != null) {
+
+            //getting the storage reference
+            val sRef: StorageReference = FirebaseStorage.getInstance().reference.child(
+                "USER_IMAGE" + System.currentTimeMillis() + "." + getFileExtension(
+                    mSelectedImageFileUri
+                )
             )
-            packageInfo.requestedPermissions?.toList() ?: emptyList()
-        } catch (e: PackageManager.NameNotFoundException) {
-            emptyList()
+
+            //adding the file to reference
+            sRef.putFile(mSelectedImageFileUri!!)
+                .addOnSuccessListener { taskSnapshot ->
+                    // The image upload is success
+                    Log.e(
+                        "Firebase Image URL",
+                        taskSnapshot.metadata!!.reference!!.downloadUrl.toString()
+                    )
+
+                    // Get the downloadable url from the task snapshot
+                    taskSnapshot.metadata!!.reference!!.downloadUrl
+                        .addOnSuccessListener { uri ->
+                            Log.e("Downloadable Image URL", uri.toString())
+
+                            // assign the image url to the variable.
+                            mProfileImageURL = uri.toString()
+
+                            // Call a function to update user details in the database.
+                            updateUserProfileData()
+                        }
+                }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(
+                        this@MyProfileActivity,
+                        exception.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    hideProgressDialog()
+                }
         }
     }
 
-    private fun findPermission(permissionName: String): String? {
-        val declaredPermissions = getDeclaredPermissions()
-        return if (declaredPermissions.contains(permissionName)) permissionName else null
+    private fun getFileExtension(uri: Uri?): String? {
+
+        return MimeTypeMap.getSingleton().getExtensionFromMimeType(contentResolver.getType(uri!!))
+    }
+
+    private fun updateUserProfileData() {
+
+        val userHashMap = HashMap<String, Any>()
+        val etName: EditText = findViewById(R.id.et_name)
+        val etEmail: EditText = findViewById(R.id.et_email)
+        val etMobile: EditText = findViewById(R.id.et_mobile)
+
+        if (mProfileImageURL.isNotEmpty() && mProfileImageURL != mUserDetails.image) {
+            userHashMap[Constants.IMAGE] = mProfileImageURL
+        }
+
+        if (etName.text.toString() != mUserDetails.name) {
+            userHashMap[Constants.NAME] = etName.text.toString()
+        }
+
+        if (etMobile.text.toString() != mUserDetails.mobile.toString()) {
+            userHashMap[Constants.MOBILE] = etMobile.text.toString().toLong()
+        }
+
+        // Update the data in the database.
+        FirestoreClass().updateUserProfileData(this@MyProfileActivity, userHashMap)
+    }
+
+    fun profileUpdateSuccess() {
+
+        hideProgressDialog()
+
+        finish()
     }
 }

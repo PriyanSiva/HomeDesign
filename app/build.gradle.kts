@@ -88,6 +88,7 @@ dependencies {
     implementation("com.google.ar.sceneform.ux:sceneform-ux:1.17.1") {
         exclude(group = "com.android.support")
     }
+    implementation(libs.firebase.storage.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
