@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.homedesign.R
 import com.example.homedesign.activities.FurnitureActivity
+import com.example.homedesign.activities.FurnitureDetailActivity
 import com.example.homedesign.models.Furniture
+
 
 class FurnitureAdapter(private val furnitureList: List<Furniture>) :
     RecyclerView.Adapter<FurnitureAdapter.FurnitureViewHolder>() {
@@ -39,8 +41,8 @@ class FurnitureAdapter(private val furnitureList: List<Furniture>) :
 
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
-            val intent = Intent(context, FurnitureActivity::class.java)
-            intent.putExtra("furniture", furniture)
+            val intent = Intent(context, FurnitureDetailActivity::class.java)
+            intent.putExtra("furniture", furniture)  // Pass the furniture object
             context.startActivity(intent)
         }
     }

@@ -11,7 +11,7 @@ import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 
-class ArActivity : AppCompatActivity() {
+class ArActivity : BaseActivity() {
 
     private lateinit var arFragment: ArFragment
 
