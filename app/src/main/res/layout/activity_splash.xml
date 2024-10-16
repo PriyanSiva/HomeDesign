@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.theme.SplashActivity">
+    >
         <TextView
             android:id="@+id/tv_app_name"
             android:layout_width="wrap_content"
@@ -19,3 +19,4 @@
             android:textSize="@dimen/splash_screen_title_text_size">
         </TextView>
   </LinearLayout>
+<!--    tools:context=".ui.theme.SplashActivity"-->

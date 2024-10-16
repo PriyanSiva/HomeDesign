@@ -48,6 +48,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    configurations.all {
+        resolutionStrategy {
+            force("androidx.core:core:1.13.0")
+        }
+    }
 }
 
 dependencies {
@@ -73,6 +78,16 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.13.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
+
+    // ARCore dependency with exclusion
+    implementation("com.google.ar:core:1.38.0") {
+        exclude(group = "com.android.support")
+    }
+
+    // Sceneform UX dependency with exclusion
+    implementation("com.google.ar.sceneform.ux:sceneform-ux:1.17.1") {
+        exclude(group = "com.android.support")
+    }
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -80,4 +95,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }

@@ -43,6 +43,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             startActivity(intent)
         }
 
+        val buttonArRoom: Button = findViewById(R.id.button_ar_room)
+        buttonArRoom.setOnClickListener {
+            val intent = Intent(this, ArActivity::class.java)
+            startActivity(intent)
+        }
+
         val firestoreClass = FirestoreClass()
         firestoreClass.signInUser(this)
 
